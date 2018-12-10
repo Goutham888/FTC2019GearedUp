@@ -29,7 +29,7 @@ public class liftAuto extends LinearOpMode {
         }
 
         sleep(5000);
-        robot.ADM.setPower(.1); //To stop jittering
+        robot.ADM.setPower(.05); //To stop jittering
 
         //Slide over
         if (opModeIsActive()){

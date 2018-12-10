@@ -57,25 +57,42 @@ public class cubeAuto extends TunableLinearOpMode {
         }
 
         sleep(5000);
-        robot.ADM.setPower(.1); //To stop jittering
+        robot.ADM.setPower(.05); //To stop jittering
 
         //Slide over
         if (opModeIsActive()){
             robot.traverse.setPosition(robot.maxTraverse);
             robot.marker.setPosition(robot.markerMid);
             sleep(1000);
-            robot.intakePitch.setPosition(robot.boxStowed);
+            robot.intakePitch.setPosition(robot.boxFlat);
             sleep(1000);
+            robot.intake.setPower(-1.0);
             robot.marker.setPosition(robot.markerIn);
         }
-        sleep(3000);
+        sleep(1000);
 
         //Drive Forward into depot
+        robot.encoderDriveStraight(36, 5.0, opModeIsActive(), runtime);
 
         //Turn to the left
-        robot.turnByGyro(45, .3, opModeIsActive());
+        robot.intake.setPower(-1.0);
+        sleep(500);
+        robot.intake.setPower(0.0);
+        sleep(500);
+        robot.intakePitch.setPosition(robot.boxStowed);
+        sleep(500);
+        robot.encoderDriveStraight(16, 2.0,opModeIsActive(), runtime);
+        sleep(1000);
+        robot.turnByGyro(45, .07, opModeIsActive());
+        sleep(1000);
 
-        //Drop off marker (out, mid)
+        //Drop off marker (out, in)
+        if(opModeIsActive()){
+            robot.marker.setPosition(robot.markerOut);
+            sleep(1000);
+            robot.marker.setPosition(robot.markerIn);
+            sleep(1000);
+        }
 
     }
 }

@@ -23,7 +23,7 @@ import static org.firstinspires.ftc.teamcode.robotBase.midTraverseRight;
 
 
 @Autonomous(name = "CubeAuto AGGRESSIVE")
-@Disabled
+//@Disabled
 public class cubeAutoAggressive extends TunableLinearOpMode {
     robotBase robot = new robotBase();
     private ElapsedTime runtime = new ElapsedTime();
@@ -45,6 +45,8 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
         // first.
         robot.init(hardwareMap);
         robot.traverse.setPosition(midTraverseRight);
+        robot.ADM.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.ADM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //tensor flow IR start
         initVuforia();
 
@@ -54,7 +56,6 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
-
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
@@ -63,24 +64,24 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
         runtime.reset();
 
         //Lower Lift
-        if (opModeIsActive()) {
+        if (opModeIsActive()){
             robot.ADM.setTargetPosition((int) (robot.LEAD_SCREW_TURNS * robot.COUNTS_PER_MOTOR_REV_rev) - 100); //tuner
             robot.ADM.setPower(.5);
             telemetry.addData("Lift Encoder Value", robot.ADM.getCurrentPosition());
+            telemetry.update();
         }
 
-        sleep(5000);
+        sleep(4500);
+        robot.ADM.setPower(.05); //To stop jittering
 
         //Slide over
-        if (opModeIsActive()) {
+        if (opModeIsActive()){
             robot.traverse.setPosition(robot.maxTraverse);
             robot.marker.setPosition(robot.markerMid);
             sleep(1000);
-            robot.intakePitch.setPosition(robot.boxStowed);
-            sleep(1000);
-            robot.marker.setPosition(robot.markerIn);
+            robot.intakePitch.setPosition(robot.boxFlat);
         }
-        sleep(3000);
+        sleep(1000);
 
         /*//////////////////////////////////////////
 
@@ -93,6 +94,7 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
             sleep(2000);
             robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             robot.inVertical.setPower(0);
+        }
             if (opModeIsActive()) {
 
                 //Vuforia command
@@ -136,66 +138,44 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
                     }
                 }
             }
-        }
 
                 if (tfod != null) {
                     tfod.shutdown();
                 }
+        telemetry.addData("Location", maxIndex);
+        telemetry.update();
 
                 //Lower arm
                 if (opModeIsActive()) {
                     robot.inVertical.setPower(.40);
-                    sleep(2000);
-                    robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    sleep(750);
+                    robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                     robot.inVertical.setPower(0);
+                    robot.marker.setPosition(robot.markerMid);
                 }
-                sleep(1000);
 
                 //Lower box and start intake
                 if (opModeIsActive()) {
-                    robot.intakePitch.setPosition(robot.boxFlat);
                     robot.intake.setPower(-1.0);
                 }
-                sleep(1000);
 
                 //Bring marker back in
                 if (opModeIsActive()) {
                     robot.marker.setPosition(robot.markerIn);
                 }
                 sleep(500);
-
-                telemetry.addData("Location", maxIndex);
-                telemetry.update();
-
-                sleep(500);
+                robot.encoderDriveStraight(6,2,opModeIsActive(), runtime);
 
 
-                //Driving Commands
-        /*
-        robot.encoderDriveStraight(10, 2.0, opModeIsActive(), runtime);
+            robot.turnByGyro(45, .07, opModeIsActive());
 
-        if(maxIndex == 0) {
-            robot.turnByGyro(45, .2, opModeIsActive());
-            robot.encoderDriveStraight(32, 2.0, opModeIsActive(), runtime);
-            robot.turnByGyro(-45, .2, opModeIsActive());
-            robot.encoderDriveStraight(36, 2.0, opModeIsActive(), runtime);
-            robot.intake.setPower(0.0);
-        }
-        if(maxIndex == 1) {
-            robot.encoderDriveStraight(50, 4.0, opModeIsActive(), runtime);
-        }
-        if(maxIndex == 2) {
-            robot.turnByGyro(-45, .2, opModeIsActive());
-            robot.encoderDriveStraight(32, 2.0, opModeIsActive(), runtime);
-            robot.turnByGyro(45, .2, opModeIsActive());
-            robot.encoderDriveStraight(36, 2.0, opModeIsActive(), runtime);
-            robot.intake.setPower(0.0);
-        }
-        robot.turnByGyro(45, .2, opModeIsActive());
-        robot.marker.setPosition(robot.markerOut);
-        robot.encoderDriveStraight(-80, 8, opModeIsActive(), runtime);
-        */
-
+            //Drop off marker (out, in)
+            if(opModeIsActive()){
+                robot.marker.setPosition(robot.markerOut);
+                sleep(1000);
+                robot.marker.setPosition(robot.markerIn);
+                sleep(1000);
+            }
             }
             /**
              * Initialize the Vuforia localization engine.

@@ -64,7 +64,7 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
         runtime.reset();
 
         //Lower Lift
-        if (opModeIsActive()){
+        if (opModeIsActive()) {
             robot.ADM.setTargetPosition((int) (robot.LEAD_SCREW_TURNS * robot.COUNTS_PER_MOTOR_REV_rev) - 100); //tuner
             robot.ADM.setPower(.5);
             telemetry.addData("Lift Encoder Value", robot.ADM.getCurrentPosition());
@@ -75,7 +75,7 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
         robot.ADM.setPower(.05); //To stop jittering
 
         //Slide over
-        if (opModeIsActive()){
+        if (opModeIsActive()) {
             robot.traverse.setPosition(robot.maxTraverse);
             robot.marker.setPosition(robot.markerMid);
             sleep(1000);
@@ -95,114 +95,113 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
             robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             robot.inVertical.setPower(0);
         }
-            if (opModeIsActive()) {
+        if (opModeIsActive()) {
 
-                //Vuforia command
+            //Vuforia command
+            if (tfod != null) {
+                tfod.activate();
+            }
+            runtime.reset();
+            while (runtime.seconds() < 4) {
                 if (tfod != null) {
-                    tfod.activate();
-                }
-                runtime.reset();
-                while (runtime.seconds() < 4) {
-                    if (tfod != null) {
-                        // getUpdatedRecognitions() will return null if no new information is available since
-                        // the last time that call was made.
-                        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                        if (updatedRecognitions != null) {
-                            if (updatedRecognitions.size() == 2) {
-                                int goldMineralX = -1;
-                                int silverMineral1X = -1;
-                                for (Recognition recognition : updatedRecognitions) {
-                                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                        goldMineralX = (int) recognition.getLeft();
-                                    } else {
-                                        silverMineral1X = (int) recognition.getLeft();
-                                    }
+                    // getUpdatedRecognitions() will return null if no new information is available since
+                    // the last time that call was made.
+                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    if (updatedRecognitions != null) {
+                        if (updatedRecognitions.size() == 2) {
+                            int goldMineralX = -1;
+                            int silverMineral1X = -1;
+                            for (Recognition recognition : updatedRecognitions) {
+                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                    goldMineralX = (int) recognition.getLeft();
+                                } else {
+                                    silverMineral1X = (int) recognition.getLeft();
                                 }
-                                if (goldMineralX == -1) {
-                                    freq[0]++;
-                                } else if (silverMineral1X != -1) {
-                                    if (goldMineralX < silverMineral1X) {
-                                        freq[1]++;
-                                    } else {
-                                        freq[2]++;
-                                    }
+                            }
+                            if (goldMineralX == -1) {
+                                freq[0]++;
+                            } else if (silverMineral1X != -1) {
+                                if (goldMineralX < silverMineral1X) {
+                                    freq[1]++;
+                                } else {
+                                    freq[2]++;
                                 }
                             }
                         }
                     }
                 }
-                for (int i = 0; i < freq.length; i++) {
-                    if (freq[i] > max) {
-                        maxIndex = i;
-                        max = freq[i];
-                    }
+            }
+            for (int i = 0; i < freq.length; i++) {
+                if (freq[i] > max) {
+                    maxIndex = i;
+                    max = freq[i];
                 }
             }
+        }
 
-                if (tfod != null) {
-                    tfod.shutdown();
-                }
+        if (tfod != null) {
+            tfod.shutdown();
+        }
         telemetry.addData("Location", maxIndex);
         telemetry.update();
 
-                //Lower arm
-                if (opModeIsActive()) {
-                    robot.inVertical.setPower(.40);
-                    sleep(750);
-                    robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                    robot.inVertical.setPower(0);
-                    robot.marker.setPosition(robot.markerMid);
-                }
-
-                //Lower box and start intake
-                if (opModeIsActive()) {
-                    robot.intake.setPower(-1.0);
-                }
-
-                //Bring marker back in
-                if (opModeIsActive()) {
-                    robot.marker.setPosition(robot.markerIn);
-                }
-                sleep(500);
-                robot.encoderDriveStraight(6,2,opModeIsActive(), runtime);
-
-
-            robot.turnByGyro(45, .07, opModeIsActive());
-
-            //Drop off marker (out, in)
-            if(opModeIsActive()){
-                robot.marker.setPosition(robot.markerOut);
-                sleep(1000);
-                robot.marker.setPosition(robot.markerIn);
-                sleep(1000);
-            }
-            }
-            /**
-             * Initialize the Vuforia localization engine.
-             */
-            private void initVuforia () {
-                /*
-                 * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-                 */
-                VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-                parameters.vuforiaLicenseKey = VUFORIA_KEY;
-                parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-
-                //  Instantiate the Vuforia engine
-                vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-                // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
-            }
-
-            /**
-             * Initialize the Tensor Flow Object Detection engine.
-             */
-            private void initTfod () {
-                int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                        "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-                TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-                tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-                tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
-            }
+        //Lower arm
+        if (opModeIsActive()) {
+            robot.inVertical.setPower(.40);
+            sleep(750);
+            robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            robot.inVertical.setPower(0);
+            robot.marker.setPosition(robot.markerMid);
         }
+
+        //Lower box and start intake
+        if (opModeIsActive()) {
+            robot.intake.setPower(-1.0);
+        }
+
+        //Bring marker back in
+        if (opModeIsActive()) {
+            robot.marker.setPosition(robot.markerIn);
+        }
+
+        sleep(500);
+        robot.encoderDriveStraight(6, 2, opModeIsActive(), runtime);
+        robot.turnByGyro(45, .07, opModeIsActive());
+
+        //Drop off marker (out, in)
+        if (opModeIsActive()) {
+            robot.marker.setPosition(robot.markerOut);
+            sleep(1000);
+            robot.marker.setPosition(robot.markerIn);
+            sleep(1000);
+        }
+    }
+        /**
+         * Initialize the Vuforia localization engine.
+         */
+        private void initVuforia () {
+            /*
+             * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+             */
+            VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+            parameters.vuforiaLicenseKey = VUFORIA_KEY;
+            parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
+            //  Instantiate the Vuforia engine
+            vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+            // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
+        }
+
+        /**
+         * Initialize the Tensor Flow Object Detection engine.
+         */
+        private void initTfod () {
+            int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                    "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+            tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+            tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+        }
+}

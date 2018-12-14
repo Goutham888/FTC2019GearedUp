@@ -10,6 +10,7 @@ import net.frogbots.ftcopmodetunercommon.opmode.TunableLinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -24,7 +25,7 @@ import static org.firstinspires.ftc.teamcode.robotBase.midTraverseRight;
 
 @Autonomous(name = "CubeAuto AGGRESSIVE")
 //@Disabled
-public class cubeAutoAggressive extends TunableLinearOpMode {
+public class cubeAutoAggressive extends LinearOpMode {
     robotBase robot = new robotBase();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -56,6 +57,21 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
+
+        telemetry.log().add("Gyro Calibrating. Do Not Move!");
+
+        runtime.reset();
+        while (robot.navxMicro.isCalibrating())  {
+            telemetry.addData("calibrating", "%s", Math.round(runtime.seconds())%2==0 ? "|.." : "..|");
+            telemetry.update();
+            sleep(50);
+        }
+        telemetry.log().clear(); telemetry.log().add("Gyro Calibrated. Press Start.");
+        telemetry.clear();
+
+
+        telemetry.update();
+
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
@@ -67,8 +83,6 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
         if (opModeIsActive()) {
             robot.ADM.setTargetPosition((int) (robot.LEAD_SCREW_TURNS * robot.COUNTS_PER_MOTOR_REV_rev) - 100); //tuner
             robot.ADM.setPower(.5);
-            telemetry.addData("Lift Encoder Value", robot.ADM.getCurrentPosition());
-            telemetry.update();
         }
 
         sleep(4500);
@@ -77,11 +91,15 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
         //Slide over
         if (opModeIsActive()) {
             robot.traverse.setPosition(robot.maxTraverse);
+            sleep(2000);
+            robot.encoderDriveStraight(4, 1.0, opModeIsActive(), runtime);
+            /*
             robot.marker.setPosition(robot.markerMid);
             sleep(1000);
             robot.intakePitch.setPosition(robot.boxFlat);
+            */
         }
-        sleep(1000);
+
 
         /*//////////////////////////////////////////
 
@@ -90,52 +108,76 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
 
         /////////////////////////////////////////*/
         if (opModeIsActive()) {
-            robot.inVertical.setPower(-.45);
+            /*robot.inVertical.setPower(-.45);
             sleep(2000);
             robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            robot.inVertical.setPower(0);
+            robot.inVertical.setPower(0);*/
         }
         if (opModeIsActive()) {
-
-            //Vuforia command
             if (tfod != null) {
                 tfod.activate();
             }
             runtime.reset();
-            while (runtime.seconds() < 4) {
+            while (runtime.seconds() < 3) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
-                        if (updatedRecognitions.size() == 2) {
+                        if (updatedRecognitions.size() == 1) {
                             int goldMineralX = -1;
-                            int silverMineral1X = -1;
                             for (Recognition recognition : updatedRecognitions) {
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                                     goldMineralX = (int) recognition.getLeft();
-                                } else {
-                                    silverMineral1X = (int) recognition.getLeft();
                                 }
                             }
-                            if (goldMineralX == -1) {
-                                freq[0]++;
-                            } else if (silverMineral1X != -1) {
-                                if (goldMineralX < silverMineral1X) {
-                                    freq[1]++;
-                                } else {
-                                    freq[2]++;
-                                }
+                            if (goldMineralX != -1) {
+                                freq[1]++;
                             }
                         }
                     }
                 }
+                telemetry.addData("Time", runtime.seconds());
+                telemetry.update();
             }
+            telemetry.addData("Position Reached", "Between Scans");
+            telemetry.update();
+            robot.turnByGyro(35, .05, opModeIsActive());
+
+            sleep(2000);
+            runtime.reset();
+            while (runtime.seconds() < 2) {
+                if (tfod != null) {
+                    // getUpdatedRecognitions() will return null if no new information is available since
+                    // the last time that call was made.
+                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                    if (updatedRecognitions != null) {
+                        if (updatedRecognitions.size() == 1) {
+                            int goldMineralX = -1;
+                            for (Recognition recognition : updatedRecognitions) {
+                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                    goldMineralX = (int) recognition.getLeft();
+                                }
+                            }
+
+                            if (goldMineralX != -1) {
+                                freq[0]++;
+                            }
+                        }
+                    }
+                }
+                telemetry.addData("Time", runtime.seconds());
+                telemetry.update();
+            }
+            robot.turnByGyro(0, .05, opModeIsActive());
             for (int i = 0; i < freq.length; i++) {
                 if (freq[i] > max) {
                     maxIndex = i;
                     max = freq[i];
                 }
+            }
+            if(freq[0] == 0 && freq[1] == 0){
+                maxIndex = 2;
             }
         }
 
@@ -143,30 +185,60 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
             tfod.shutdown();
         }
         telemetry.addData("Location", maxIndex);
+        telemetry.addData("Index 0", freq[0]);
+        telemetry.addData("Index 1", freq[1]);
+        telemetry.addData("Index 2", freq[2]);
         telemetry.update();
 
         //Lower arm
         if (opModeIsActive()) {
+            /*
             robot.inVertical.setPower(.40);
             sleep(750);
             robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.inVertical.setPower(0);
+            robot.inVertical.setPower(0);*/
             robot.marker.setPosition(robot.markerMid);
+            sleep(500);
+            robot.intakePitch.setPosition(robot.boxFlat);
+
         }
 
-        //Lower box and start intake
-        if (opModeIsActive()) {
-            robot.intake.setPower(-1.0);
-        }
+        if(maxIndex == 0) {
+            robot.turnByGyro(45, .05, opModeIsActive());
+            if (opModeIsActive()) {
+                robot.intake.setPower(1.0);
+            }
+            robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
+            robot.intake.setPower(0.0);
+            robot.intakePitch.setPosition(robot.boxStowed);
+            robot.turnByGyro(-45, .05, opModeIsActive());
+            robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
+            robot.turnByGyro(45, .05, opModeIsActive());
 
-        //Bring marker back in
-        if (opModeIsActive()) {
-            robot.marker.setPosition(robot.markerIn);
         }
-
-        sleep(500);
-        robot.encoderDriveStraight(6, 2, opModeIsActive(), runtime);
-        robot.turnByGyro(45, .07, opModeIsActive());
+        else if(maxIndex == 1){
+            if (opModeIsActive()) {
+                robot.intake.setPower(1.0);
+            }
+            robot.encoderDriveStraight(30, 5.0, opModeIsActive(), runtime);
+            robot.intake.setPower(0.0);
+            robot.intakePitch.setPosition(robot.boxStowed);
+            robot.encoderDriveStraight(16, 2.0,opModeIsActive(), runtime);
+            sleep(1000);
+            robot.turnByGyro(45, .05, opModeIsActive());
+            sleep(1000);
+        }
+        else if(maxIndex == 2){
+            robot.turnByGyro(-45, .05, opModeIsActive());
+            if (opModeIsActive()) {
+                robot.intake.setPower(1.0);
+            }
+            robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
+            robot.intake.setPower(0.0);
+            robot.intakePitch.setPosition(robot.boxStowed);
+            robot.turnByGyro(45, .05, opModeIsActive());
+            robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
+        }
 
         //Drop off marker (out, in)
         if (opModeIsActive()) {
@@ -186,7 +258,10 @@ public class cubeAutoAggressive extends TunableLinearOpMode {
             VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
             parameters.vuforiaLicenseKey = VUFORIA_KEY;
+
             parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+            //or
+            //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam");
 
             //  Instantiate the Vuforia engine
             vuforia = ClassFactory.getInstance().createVuforia(parameters);

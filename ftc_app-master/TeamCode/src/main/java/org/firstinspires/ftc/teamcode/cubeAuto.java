@@ -23,7 +23,7 @@ import static org.firstinspires.ftc.teamcode.robotBase.midTraverseRight;
 
 @Autonomous(name = "CubeAuto SAFE")
 //@Disabled
-public class cubeAuto extends TunableLinearOpMode {
+public class cubeAuto extends LinearOpMode {
     robotBase robot = new robotBase();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -83,7 +83,7 @@ public class cubeAuto extends TunableLinearOpMode {
         sleep(500);
         robot.encoderDriveStraight(16, 2.0,opModeIsActive(), runtime);
         sleep(1000);
-        robot.turnByGyro(45, .07, opModeIsActive());
+        robot.turnByGyro(45, .05, opModeIsActive());
         sleep(1000);
 
         //Drop off marker (out, in)

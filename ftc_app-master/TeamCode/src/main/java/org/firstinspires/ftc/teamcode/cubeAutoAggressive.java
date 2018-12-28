@@ -144,7 +144,7 @@ public class cubeAutoAggressive extends LinearOpMode {
             telemetry.update();
             robot.turnByGyro(35, .05, opModeIsActive());
 
-            sleep(2000);
+            sleep(1000);
             runtime.reset();
             while (runtime.seconds() < 2) {
                 if (tfod != null) {
@@ -229,7 +229,7 @@ public class cubeAutoAggressive extends LinearOpMode {
             sleep(1000);
         }
         else if(maxIndex == 2){
-            robot.turnByGyro(-45, .05, opModeIsActive());
+            robot.turnByGyro(-43, .05, opModeIsActive());
             if (opModeIsActive()) {
                 robot.intake.setPower(1.0);
             }

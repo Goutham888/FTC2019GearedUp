@@ -23,9 +23,9 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import static org.firstinspires.ftc.teamcode.robotBase.midTraverseRight;
 
 
-@Autonomous(name = "CubeAuto AGGRESSIVE")
+@Autonomous(name = "BallAuto AGGRESSIVE")
 //@Disabled
-public class cubeAutoAggressive extends LinearOpMode {
+public class ballAutoAggressive extends LinearOpMode {
     robotBase robot = new robotBase();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -93,6 +93,7 @@ public class cubeAutoAggressive extends LinearOpMode {
             sleep(2000);
             robot.encoderDriveStraight(4, 1.0, opModeIsActive(), runtime);
         }
+
         if (opModeIsActive()) {
             if (tfod != null) {
                 tfod.activate();
@@ -172,82 +173,45 @@ public class cubeAutoAggressive extends LinearOpMode {
 
         if(maxIndex == 0) {
             robot.turnByGyro(40, .05, opModeIsActive());
-            if (opModeIsActive()) {
-                robot.intake.setPower(1.0);
-            }
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
-            robot.intake.setPower(0.0);
-            robot.intakePitch.setPosition(robot.boxStowed);
-            robot.turnByGyro(-45, .05, opModeIsActive());
-            robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
-            robot.turnByGyro(45, .05, opModeIsActive());
-
         }
         else if(maxIndex == 1){
-            if (opModeIsActive()) {
-                robot.intake.setPower(1.0);
-            }
-            robot.encoderDriveStraight(30, 5.0, opModeIsActive(), runtime);
-            robot.intake.setPower(0.0);
-            robot.intakePitch.setPosition(robot.boxStowed);
-            robot.encoderDriveStraight(16, 2.0,opModeIsActive(), runtime);
-            sleep(1000);
-            robot.turnByGyro(45, .05, opModeIsActive());
-            sleep(1000);
+            robot.encoderDriveStraight(16, 5.0, opModeIsActive(), runtime);
         }
         else if(maxIndex == 2){
             robot.turnByGyro(-40, .05, opModeIsActive());
-            if (opModeIsActive()) {
-                robot.intake.setPower(1.0);
-            }
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
-            robot.intake.setPower(0.0);
-            robot.intakePitch.setPosition(robot.boxStowed);
-            robot.turnByGyro(45, .05, opModeIsActive());
-            robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
-        }
-
-        //robot.turnByGyro(45, .05, opModeIsActive());
-        //robot.encoderDriveStraight(-90, 5.0, opModeIsActive(), runtime);
-
-
-        //Drop off marker (out, in)
-        if (opModeIsActive()) {
-            robot.marker.setPosition(robot.markerOut);
-            sleep(1000);
-            robot.marker.setPosition(robot.markerIn);
-            sleep(1000);
         }
     }
-        /**
-         * Initialize the Vuforia localization engine.
+    /**
+     * Initialize the Vuforia localization engine.
+     */
+    private void initVuforia () {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
-        private void initVuforia () {
-            /*
-             * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-             */
-            VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-            parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
 
-            parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-            //or
-            //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam");
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        //or
+        //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam");
 
-            //  Instantiate the Vuforia engine
-            vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-            // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
-        }
+        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
+    }
 
-        /**
-         * Initialize the Tensor Flow Object Detection engine.
-         */
-        private void initTfod () {
-            int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                    "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-            TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-            tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-            tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
-        }
+    /**
+     * Initialize the Tensor Flow Object Detection engine.
+     */
+    private void initTfod () {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+    }
 }

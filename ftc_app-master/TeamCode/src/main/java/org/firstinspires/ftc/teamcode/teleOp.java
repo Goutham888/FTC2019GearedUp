@@ -27,7 +27,8 @@ public class teleOp extends OpMode {
         robot.inVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.ADM.setMode(STOP_AND_RESET_ENCODER);
         robot.ADM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override

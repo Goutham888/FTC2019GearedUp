@@ -36,8 +36,6 @@ public class liftAuto extends LinearOpMode {
             robot.traverse.setPosition(robot.maxTraverse);
             robot.marker.setPosition(robot.markerMid);
             sleep(1000);
-            robot.intakePitch.setPosition(robot.boxStowed);
-            sleep(1000);
             robot.marker.setPosition(robot.markerIn);
         }
         sleep(3000);

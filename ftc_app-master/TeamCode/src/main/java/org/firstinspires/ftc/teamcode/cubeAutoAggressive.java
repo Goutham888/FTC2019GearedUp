@@ -122,7 +122,7 @@ public class cubeAutoAggressive extends LinearOpMode {
             }
             telemetry.addData("Position Reached", "Between Scans");
             telemetry.update();
-            robot.turnByGyro(35, .05, opModeIsActive());
+            robot.turnByGyro(-35, .05, opModeIsActive());
 
             sleep(1000);
             runtime.reset();
@@ -141,7 +141,7 @@ public class cubeAutoAggressive extends LinearOpMode {
                             }
 
                             if (goldMineralX != -1) {
-                                freq[0]++;
+                                freq[2]++;
                             }
                         }
                     }
@@ -156,8 +156,8 @@ public class cubeAutoAggressive extends LinearOpMode {
                     max = freq[i];
                 }
             }
-            if(freq[0] < 2 && freq[1] < 2){
-                maxIndex = 2;
+            if(freq[2] < 2 && freq[1] < 2){
+                maxIndex = 0;
             }
         }
 
@@ -176,8 +176,6 @@ public class cubeAutoAggressive extends LinearOpMode {
                 robot.intake.setPower(1.0);
             }
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
-            robot.intake.setPower(0.0);
-            robot.intakePitch.setPosition(robot.boxStowed);
             robot.turnByGyro(-45, .05, opModeIsActive());
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
             robot.turnByGyro(45, .05, opModeIsActive());
@@ -188,8 +186,6 @@ public class cubeAutoAggressive extends LinearOpMode {
                 robot.intake.setPower(1.0);
             }
             robot.encoderDriveStraight(30, 5.0, opModeIsActive(), runtime);
-            robot.intake.setPower(0.0);
-            robot.intakePitch.setPosition(robot.boxStowed);
             robot.encoderDriveStraight(16, 2.0,opModeIsActive(), runtime);
             sleep(1000);
             robot.turnByGyro(45, .05, opModeIsActive());
@@ -201,8 +197,6 @@ public class cubeAutoAggressive extends LinearOpMode {
                 robot.intake.setPower(1.0);
             }
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
-            robot.intake.setPower(0.0);
-            robot.intakePitch.setPosition(robot.boxStowed);
             robot.turnByGyro(45, .05, opModeIsActive());
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
         }

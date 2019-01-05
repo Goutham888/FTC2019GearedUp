@@ -35,7 +35,7 @@ public class robotBase
 
     public Servo traverse                   = null; //ADM_servo
     public Servo marker                     = null; //team_marker
-    public Servo intakePitch                = null; //intake_pitch
+    public Servo intakeGate                = null; //intake_pitch
     public CRServo intake                   = null; //intake
     public DigitalChannel hall              = null; //hall
     IntegratingGyroscope gyro;
@@ -54,9 +54,9 @@ public class robotBase
     public static final double  COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV_rev * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
     public static final double  DRIVE_SPEED = 0.18;
-    public static final double  HEADING_THRESHOLD  = 4;
+    public static final double  HEADING_THRESHOLD  = 3;
 
-    public static final double  LEAD_SCREW_TURNS = 12.5; // Turns in the ADM lead screw
+    public static final double  LEAD_SCREW_TURNS = 12.25; // Turns in the ADM lead screw
 
     public static final double maxTraverse = .73;
     public static final double minTraverse = .32;
@@ -66,11 +66,6 @@ public class robotBase
     public static final double markerIn = .15;
     public static final double markerMid = .3;
     public static final double markerOut = .8;
-
-    public static final double boxIntake = .52;
-    public static final double boxFlat = 0.60;
-    public static final double boxStowed = 0.1;
-    public static final double boxDump = 1.0;
 
     /* Constructor */
 
@@ -93,7 +88,7 @@ public class robotBase
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         ADM.setDirection(DcMotor.Direction.FORWARD);
-        inHorizontal.setDirection(DcMotor.Direction.FORWARD);
+        inHorizontal.setDirection(DcMotor.Direction.REVERSE);
         inVertical.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
@@ -120,8 +115,8 @@ public class robotBase
         intake.setDirection(CRServo.Direction.FORWARD);
         marker = hwMap.get(Servo.class, "team_marker");
         marker.setDirection(Servo.Direction.FORWARD);
-        intakePitch = hwMap.get(Servo.class, "intake_pitch");
-        intakePitch.setDirection(Servo.Direction.FORWARD);
+        intakeGate = hwMap.get(Servo.class, "intake_pitch");
+        intakeGate.setDirection(Servo.Direction.FORWARD);
 
         navxMicro = hwMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = (IntegratingGyroscope)navxMicro;
@@ -202,7 +197,7 @@ public class robotBase
     }
 
     public static double getWheelPower(double in){
-        in *= .15;
+        in *= .2;
         return in;
     }
 

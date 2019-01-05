@@ -123,7 +123,7 @@ public class ballAutoAggressive extends LinearOpMode {
             }
             telemetry.addData("Position Reached", "Between Scans");
             telemetry.update();
-            robot.turnByGyro(35, .05, opModeIsActive());
+            robot.turnByGyro(-35, .05, opModeIsActive());
 
             sleep(1000);
             runtime.reset();
@@ -142,7 +142,7 @@ public class ballAutoAggressive extends LinearOpMode {
                             }
 
                             if (goldMineralX != -1) {
-                                freq[0]++;
+                                freq[2]++;
                             }
                         }
                     }
@@ -157,8 +157,8 @@ public class ballAutoAggressive extends LinearOpMode {
                     max = freq[i];
                 }
             }
-            if(freq[0] < 2 && freq[1] < 2){
-                maxIndex = 2;
+            if(freq[2] < 2 && freq[1] < 2){
+                maxIndex = 0;
             }
         }
 
@@ -172,14 +172,17 @@ public class ballAutoAggressive extends LinearOpMode {
         telemetry.update();
 
         if(maxIndex == 0) {
-            robot.turnByGyro(40, .05, opModeIsActive());
+            robot.turnByGyro(35, .05, opModeIsActive());
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
         }
         else if(maxIndex == 1){
             robot.encoderDriveStraight(16, 5.0, opModeIsActive(), runtime);
+            robot.turnByGyro(179, .07, opModeIsActive());
+            robot.encoderDriveStraight(4, 2.0, opModeIsActive(), runtime);
+
         }
         else if(maxIndex == 2){
-            robot.turnByGyro(-40, .05, opModeIsActive());
+            robot.turnByGyro(-35, .05, opModeIsActive());
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
         }
     }

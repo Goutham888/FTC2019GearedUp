@@ -64,8 +64,6 @@ public class cubeAuto extends LinearOpMode {
             robot.traverse.setPosition(robot.maxTraverse);
             robot.marker.setPosition(robot.markerMid);
             sleep(1000);
-            robot.intakePitch.setPosition(robot.boxFlat);
-            sleep(1000);
             robot.intake.setPower(-1.0);
             robot.marker.setPosition(robot.markerIn);
         }
@@ -78,8 +76,6 @@ public class cubeAuto extends LinearOpMode {
         robot.intake.setPower(-1.0);
         sleep(500);
         robot.intake.setPower(0.0);
-        sleep(500);
-        robot.intakePitch.setPosition(robot.boxStowed);
         sleep(500);
         robot.encoderDriveStraight(16, 2.0,opModeIsActive(), runtime);
         sleep(1000);

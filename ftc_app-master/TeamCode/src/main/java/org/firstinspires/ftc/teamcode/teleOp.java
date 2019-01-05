@@ -107,28 +107,11 @@ public class teleOp extends OpMode {
         else
             robot.intake.setPower(0.0);
 
-        if(gamepad2.dpad_left) {
-            robot.intakePitch.setPosition(robot.boxFlat);
-            sleep(500);
-        }
-        if(gamepad2.dpad_right) {
-            robot.intakePitch.setPosition(robot.boxDump);
-            sleep(500);
-        }
-        if(gamepad2.dpad_up) {
-            robot.intakePitch.setPosition(robot.boxStowed);
-            sleep(500);
-        }
-        if(gamepad2.dpad_down){
-            robot.intakePitch.setPosition(robot.boxIntake);
-            sleep(500);
-        }
+        if(gamepad2.right_trigger > 0)
+            robot.intakeGate.setPosition(-1.0);
+        else
+            robot.intakeGate.setPosition(0.0);
 
-        telemetry.addData("Pos", robot.inVertical.getCurrentPosition());
-        telemetry.addData("Out", robot.inHorizontal.getCurrentPosition());
-        telemetry.addData("Marker", robot.marker.getPosition());
-        telemetry.addData("Encoder REV", robot.ADM.getCurrentPosition());
-        telemetry.addData("Servo Pitch", robot.intakePitch.getPosition());
         telemetry.update();
     }
 }

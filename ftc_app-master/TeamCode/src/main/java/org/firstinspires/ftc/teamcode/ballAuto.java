@@ -64,8 +64,6 @@ public class ballAuto extends LinearOpMode {
             robot.traverse.setPosition(robot.maxTraverse);
             robot.marker.setPosition(robot.markerMid);
             sleep(1000);
-            robot.intakePitch.setPosition(robot.boxFlat);
-            sleep(1000);
             robot.intake.setPower(-1.0);
             robot.marker.setPosition(robot.markerIn);
         }

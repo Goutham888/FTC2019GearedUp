@@ -78,21 +78,6 @@ public class ballAutoAggressive extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        //Lower Lift
-        if (opModeIsActive()) {
-            robot.ADM.setTargetPosition((int) (robot.LEAD_SCREW_TURNS * robot.COUNTS_PER_MOTOR_REV_rev) - 100); //tuner
-            robot.ADM.setPower(.75);
-        }
-
-        sleep(3000);
-        robot.ADM.setPower(.05); //To stop jittering
-
-        //Slide over
-        if (opModeIsActive()) {
-            robot.traverse.setPosition(robot.maxTraverse);
-            sleep(2000);
-            robot.encoderDriveStraight(4, 1.0, opModeIsActive(), runtime);
-        }
 
         if (opModeIsActive()) {
             if (tfod != null) {
@@ -105,14 +90,26 @@ public class ballAutoAggressive extends LinearOpMode {
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
-                        if (updatedRecognitions.size() == 1) {
+                        if (updatedRecognitions.size() == 2) {
                             int goldMineralX = -1;
+                            int silverMineral1X = -1;
+                            int silverMineral2X = -1;
                             for (Recognition recognition : updatedRecognitions) {
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                                     goldMineralX = (int) recognition.getLeft();
+                                } else if (silverMineral1X == -1) {
+                                    silverMineral1X = (int) recognition.getLeft();
+                                } else {
+                                    silverMineral2X = (int) recognition.getLeft();
                                 }
                             }
-                            if (goldMineralX != -1) {
+                            if (silverMineral1X != -1 && silverMineral2X != -1) {
+                                freq[2]++;
+                            }
+                            else if (goldMineralX < silverMineral1X || goldMineralX < silverMineral2X) {
+                                freq[0]++;
+                            }
+                            else if (goldMineralX > silverMineral1X || goldMineralX > silverMineral2X){
                                 freq[1]++;
                             }
                         }
@@ -121,44 +118,11 @@ public class ballAutoAggressive extends LinearOpMode {
                 telemetry.addData("Time", runtime.seconds());
                 telemetry.update();
             }
-            telemetry.addData("Position Reached", "Between Scans");
-            telemetry.update();
-            robot.turnByGyro(-35, .05, opModeIsActive());
-
-            sleep(1000);
-            runtime.reset();
-            while (runtime.seconds() < 2) {
-                if (tfod != null) {
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
-                    List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                    if (updatedRecognitions != null) {
-                        if (updatedRecognitions.size() == 1) {
-                            int goldMineralX = -1;
-                            for (Recognition recognition : updatedRecognitions) {
-                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    goldMineralX = (int) recognition.getLeft();
-                                }
-                            }
-
-                            if (goldMineralX != -1) {
-                                freq[2]++;
-                            }
-                        }
-                    }
-                }
-                telemetry.addData("Time", runtime.seconds());
-                telemetry.update();
-            }
-            robot.turnByGyro(0, .05, opModeIsActive());
             for (int i = 0; i < freq.length; i++) {
                 if (freq[i] > max) {
                     maxIndex = i;
                     max = freq[i];
                 }
-            }
-            if(freq[2] < 2 && freq[1] < 2){
-                maxIndex = 0;
             }
         }
 
@@ -170,19 +134,35 @@ public class ballAutoAggressive extends LinearOpMode {
         telemetry.addData("Index 1", freq[1]);
         telemetry.addData("Index 2", freq[2]);
         telemetry.update();
+        //Lower Lift
+        if (opModeIsActive()) {
+            robot.ADM.setTargetPosition((int) (robot.LEAD_SCREW_TURNS * robot.COUNTS_PER_MOTOR_REV_rev) - 100); //tuner
+            robot.ADM.setPower(.95);
+        }
+
+        sleep(3000);
+        robot.ADM.setPower(.05); //To stop jittering
+
+        //Slide over
+        if (opModeIsActive()) {
+            robot.traverse.setPosition(robot.maxTraverse);
+            sleep(2000);
+            robot.encoderDriveStraight(4, 1.0, opModeIsActive(), runtime);
+        }
 
         if(maxIndex == 0) {
-            robot.turnByGyro(35, .05, opModeIsActive());
+            robot.turnByGyro(25, .07, opModeIsActive());
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
         }
         else if(maxIndex == 1){
+            robot.turnByGyro(0, .07, opModeIsActive());
             robot.encoderDriveStraight(16, 5.0, opModeIsActive(), runtime);
             robot.turnByGyro(179, .07, opModeIsActive());
             robot.encoderDriveStraight(4, 2.0, opModeIsActive(), runtime);
 
         }
         else if(maxIndex == 2){
-            robot.turnByGyro(-35, .05, opModeIsActive());
+            robot.turnByGyro(-25, .05, opModeIsActive());
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
         }
     }

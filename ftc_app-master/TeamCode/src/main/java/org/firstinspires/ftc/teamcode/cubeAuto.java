@@ -52,42 +52,24 @@ public class cubeAuto extends LinearOpMode {
         //Lower Lift
         if (opModeIsActive()){
             robot.ADM.setTargetPosition((int) (robot.LEAD_SCREW_TURNS * robot.COUNTS_PER_MOTOR_REV_rev) - 100); //tuner
-            robot.ADM.setPower(.5);
+            robot.ADM.setPower(.95);
             telemetry.addData("Lift Encoder Value", robot.ADM.getCurrentPosition());
         }
 
-        sleep(5000);
+        sleep(3000);
         robot.ADM.setPower(.05); //To stop jittering
+        robot.traverse.setPosition(robot.maxTraverse);
+        sleep(2000);
 
-        //Slide over
-        if (opModeIsActive()){
-            robot.traverse.setPosition(robot.maxTraverse);
-            robot.marker.setPosition(robot.markerMid);
-            sleep(1000);
-            robot.intake.setPower(-1.0);
-            robot.marker.setPosition(robot.markerIn);
-        }
+        robot.turnByGyro(0, .07, opModeIsActive());
+        robot.encoderDriveStraight(51, 5.0, opModeIsActive(), runtime);
         sleep(1000);
+        robot.turnByGyro(40, .07, opModeIsActive());
 
-        //Drive Forward into depot
-        robot.encoderDriveStraight(36, 5.0, opModeIsActive(), runtime);
-
-        //Turn to the left
-        robot.intake.setPower(-1.0);
-        sleep(500);
-        robot.intake.setPower(0.0);
-        sleep(500);
-        robot.encoderDriveStraight(16, 2.0,opModeIsActive(), runtime);
-        sleep(1000);
-        robot.turnByGyro(45, .05, opModeIsActive());
-        sleep(1000);
-
-        //Drop off marker (out, in)
-        if(opModeIsActive()){
+        if (opModeIsActive()) {
             robot.marker.setPosition(robot.markerOut);
             sleep(1000);
-            robot.marker.setPosition(robot.markerIn);
-            sleep(1000);
+            robot.marker.setPosition(robot.markerMid);
         }
 
     }

@@ -37,9 +37,9 @@ public class ballAuto extends LinearOpMode {
 
         runtime.reset();
         while (robot.navxMicro.isCalibrating())  {
-            telemetry.addData("calibrating", "%s", Math.round(runtime.seconds())%2==0 ? "|.." : "..|");
+            telemetry.addData("Calibrating", "%s", Math.round(runtime.seconds())%2==0 ? "|.." : "..|");
             telemetry.update();
-            sleep(50);
+            sleep(100);
         }
         telemetry.log().clear(); telemetry.log().add("Gyro Calibrated. Press Start.");
         telemetry.clear();
@@ -51,8 +51,8 @@ public class ballAuto extends LinearOpMode {
 
         //Lower Lift
         if (opModeIsActive()){
-            robot.ADM.setTargetPosition((int) (robot.LEAD_SCREW_TURNS * robot.COUNTS_PER_MOTOR_REV_rev) - 100); //tuner
-            robot.ADM.setPower(.75);
+            robot.ADM.setTargetPosition((int) (robot.LEAD_SCREW_TURNS * robot.COUNTS_PER_MOTOR_REV_rev) - 100);
+            robot.ADM.setPower(.95);
             telemetry.addData("Lift Encoder Value", robot.ADM.getCurrentPosition());
         }
 
@@ -62,10 +62,10 @@ public class ballAuto extends LinearOpMode {
         //Slide over
         if (opModeIsActive()){
             robot.traverse.setPosition(robot.maxTraverse);
-            robot.marker.setPosition(robot.markerMid);
-            sleep(1000);
-            robot.intake.setPower(-1.0);
-            robot.marker.setPosition(robot.markerIn);
+            sleep(2000);
+            robot.encoderDriveStraight(22, 5.0, opModeIsActive(), runtime);
+            robot.turnByGyro(179, .07, opModeIsActive());
+            robot.encoderDriveStraight(10, 2.0, opModeIsActive(), runtime);
         }
         sleep(1000);
     }

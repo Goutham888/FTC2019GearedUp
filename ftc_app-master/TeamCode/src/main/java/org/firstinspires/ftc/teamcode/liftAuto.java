@@ -24,22 +24,17 @@ public class liftAuto extends LinearOpMode {
         //Lower Lift
         if (opModeIsActive()){
             robot.ADM.setTargetPosition((int) (robot.LEAD_SCREW_TURNS * robot.COUNTS_PER_MOTOR_REV_rev) - 100); //tuner
-            robot.ADM.setPower(.5);
+            robot.ADM.setPower(.95);
             telemetry.addData("Lift Encoder Value", robot.ADM.getCurrentPosition());
         }
 
-        sleep(5000);
+        sleep(3000);
         robot.ADM.setPower(.05); //To stop jittering
 
         //Slide over
         if (opModeIsActive()){
             robot.traverse.setPosition(robot.maxTraverse);
-            robot.marker.setPosition(robot.markerMid);
-            sleep(1000);
-            robot.marker.setPosition(robot.markerIn);
+            sleep(3000);
         }
-        sleep(3000);
-
-
     }
 }

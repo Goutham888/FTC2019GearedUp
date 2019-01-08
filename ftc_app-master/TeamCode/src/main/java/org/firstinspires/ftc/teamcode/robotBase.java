@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
@@ -46,15 +47,14 @@ public class robotBase
     private ElapsedTime period              = new ElapsedTime();
 
     //Items for encoders
-    public static final double  COUNTS_PER_MOTOR_REV_core     = 288.0;
     public static final double  COUNTS_PER_MOTOR_REV_rev      = 560.0;
     public static final double  DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
     public static final double  WHEEL_DIAMETER_INCHES = 4.0;    // For figuring circumference
 
     public static final double  COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV_rev * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    public static final double  DRIVE_SPEED = 0.18;
-    public static final double  HEADING_THRESHOLD  = 3;
+    public static final double  DRIVE_SPEED = 0.20;
+    public static final double  HEADING_THRESHOLD  = 2;
 
     public static final double  LEAD_SCREW_TURNS = 12.25; // Turns in the ADM lead screw
 
@@ -89,7 +89,7 @@ public class robotBase
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         ADM.setDirection(DcMotor.Direction.FORWARD);
         inHorizontal.setDirection(DcMotor.Direction.REVERSE);
-        inVertical.setDirection(DcMotor.Direction.FORWARD);
+        inVertical.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftDrive.setPower(0);

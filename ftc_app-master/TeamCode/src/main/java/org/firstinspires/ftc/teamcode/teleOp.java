@@ -23,8 +23,6 @@ public class teleOp extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap);
-        robot.inVertical.setMode(STOP_AND_RESET_ENCODER);
-        robot.inVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.ADM.setMode(STOP_AND_RESET_ENCODER);
         robot.ADM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -95,23 +93,23 @@ public class teleOp extends OpMode {
         //------------------------------------------------------------------------------------------
         robot.inVertical.setMode(RUN_WITHOUT_ENCODER);
         robot.inVertical.setPower(gamepad2.right_stick_y * 0.45);
+        robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Set motor power to stick input, directionally scaled
         robot.inHorizontal.setPower(gamepad2.left_stick_y);
 
         //Control Intake
         if(gamepad2.right_trigger > 0)
-            robot.intake.setPower(-1.0);
+            robot.intake.setPower(.8);
         else if(gamepad2.left_trigger > 0)
-            robot.intake.setPower(1.0);
+            robot.intake.setPower(-.8);
         else
             robot.intake.setPower(0.0);
 
-        if(gamepad2.right_trigger > 0)
-            robot.intakeGate.setPosition(-1.0);
+        if(gamepad2.b)
+            robot.intakeGate.setPosition(1.0);
         else
-            robot.intakeGate.setPosition(0.0);
-
+            robot.intakeGate.setPosition(-1.0);
         telemetry.update();
     }
 }

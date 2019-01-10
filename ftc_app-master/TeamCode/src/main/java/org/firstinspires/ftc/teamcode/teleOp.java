@@ -92,7 +92,7 @@ public class teleOp extends OpMode {
 
         //------------------------------------------------------------------------------------------
         robot.inVertical.setMode(RUN_WITHOUT_ENCODER);
-        robot.inVertical.setPower(gamepad2.right_stick_y * 0.45);
+        robot.inVertical.setPower(-gamepad2.right_stick_y * 0.35);
         robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Set motor power to stick input, directionally scaled
@@ -106,7 +106,7 @@ public class teleOp extends OpMode {
         else
             robot.intake.setPower(0.0);
 
-        if(gamepad2.b)
+        if(gamepad2.a)
             robot.intakeGate.setPosition(1.0);
         else
             robot.intakeGate.setPosition(-1.0);

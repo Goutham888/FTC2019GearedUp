@@ -197,7 +197,7 @@ public class robotBase
     }
 
     public static double getWheelPower(double in){
-        in *= .2;
+        in *= .25;
         return in;
     }
 

@@ -1,24 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import net.frogbots.ftcopmodetunercommon.opmode.TunableLinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import static org.firstinspires.ftc.teamcode.robotBase.midTraverseRight;
 
@@ -83,7 +75,7 @@ public class cubeAutoAggressive extends LinearOpMode {
                 tfod.activate();
             }
             runtime.reset();
-            while (runtime.seconds() < 3) {
+            while (runtime.seconds() < 3 && opModeIsActive()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -162,7 +154,6 @@ public class cubeAutoAggressive extends LinearOpMode {
         else if(maxIndex == 1){
             robot.turnByGyro(0, .07, opModeIsActive());
             robot.encoderDriveStraight(51, 5.0, opModeIsActive(), runtime);
-            sleep(1000);
             robot.turnByGyro(40, .07, opModeIsActive());
         }
         else if(maxIndex == 2){
@@ -170,7 +161,7 @@ public class cubeAutoAggressive extends LinearOpMode {
             robot.encoderDriveStraight(42, 4.0, opModeIsActive(), runtime);
             robot.encoderDriveStraight(-4, 1.5, opModeIsActive(), runtime);
             robot.turnByGyro(40, .05, opModeIsActive());
-            robot.encoderDriveStraight(30, 4.0, opModeIsActive(), runtime);
+            robot.encoderDriveStraight(26, 4.0, opModeIsActive(), runtime);
         }
 
 
@@ -179,6 +170,8 @@ public class cubeAutoAggressive extends LinearOpMode {
             robot.marker.setPosition(robot.markerOut);
             sleep(1000);
             robot.marker.setPosition(robot.markerMid);
+            robot.turnByGyro(-45, .07, opModeIsActive());
+            robot.encoderDriveStraight(-20, 4.0, opModeIsActive(), runtime);
         }
     }
         /**

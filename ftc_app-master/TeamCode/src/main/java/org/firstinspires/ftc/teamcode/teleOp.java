@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static android.os.SystemClock.sleep;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 
@@ -25,8 +26,8 @@ public class teleOp extends OpMode {
         robot.init(hardwareMap);
         robot.ADM.setMode(STOP_AND_RESET_ENCODER);
         robot.ADM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftDrive.setMode(RUN_USING_ENCODER);
+        robot.rightDrive.setMode(RUN_USING_ENCODER);
     }
 
     @Override
@@ -91,8 +92,9 @@ public class teleOp extends OpMode {
         }
 
         //------------------------------------------------------------------------------------------
-        robot.inVertical.setMode(RUN_WITHOUT_ENCODER);
-        robot.inVertical.setPower(-gamepad2.right_stick_y * 0.35);
+        robot.inVertical.setMode(RUN_USING_ENCODER);
+        telemetry.addData("Arm", robot.inVertical.getCurrentPosition());//-6150
+        robot.inVertical.setPower(-gamepad2.right_stick_y * 0.15);
         robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Set motor power to stick input, directionally scaled

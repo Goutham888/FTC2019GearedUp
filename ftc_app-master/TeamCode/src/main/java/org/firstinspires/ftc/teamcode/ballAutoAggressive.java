@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -67,6 +68,7 @@ public class ballAutoAggressive extends LinearOpMode {
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
 
+        robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         waitForStart();
         runtime.reset();
 
@@ -77,6 +79,7 @@ public class ballAutoAggressive extends LinearOpMode {
             }
             runtime.reset();
             while (runtime.seconds() < 3 && opModeIsActive()) {
+                robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.FIRE_LARGE);
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -136,6 +139,8 @@ public class ballAutoAggressive extends LinearOpMode {
         sleep(3000);
         robot.ADM.setPower(.05); //To stop jittering
 
+        robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.STROBE_GOLD);
+
         //Slide over
         if (opModeIsActive()) {
             robot.traverse.setPosition(robot.maxTraverse);
@@ -144,14 +149,14 @@ public class ballAutoAggressive extends LinearOpMode {
         }
 
         if(maxIndex == 0) {
-            robot.turnByGyro(25, .07, opModeIsActive());
+            robot.turnByGyro(25, .05, opModeIsActive());
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
         }
         else if(maxIndex == 1){
-            robot.turnByGyro(0, .07, opModeIsActive());
+            robot.turnByGyro(0, .05, opModeIsActive());
             robot.encoderDriveStraight(16, 5.0, opModeIsActive(), runtime);
             robot.turnByGyro(179, .07, opModeIsActive());
-            robot.encoderDriveStraight(4, 2.0, opModeIsActive(), runtime);
+            robot.encoderDriveStraight(12, 2.0, opModeIsActive(), runtime);
 
         }
         else if(maxIndex == 2){

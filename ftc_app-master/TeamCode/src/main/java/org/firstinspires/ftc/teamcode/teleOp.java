@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +14,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENC
 @TeleOp(name = "TeleOp")
 //Disabled
 public class teleOp extends OpMode {
+    RevBlinkinLedDriver.BlinkinPattern pattern;
     robotBase robot                     = new robotBase();
     private ElapsedTime runtime         = new ElapsedTime();
 
@@ -28,6 +30,7 @@ public class teleOp extends OpMode {
         robot.ADM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.leftDrive.setMode(RUN_USING_ENCODER);
         robot.rightDrive.setMode(RUN_USING_ENCODER);
+        runtime.reset();
     }
 
     @Override
@@ -93,8 +96,7 @@ public class teleOp extends OpMode {
 
         //------------------------------------------------------------------------------------------
         robot.inVertical.setMode(RUN_USING_ENCODER);
-        telemetry.addData("Arm", robot.inVertical.getCurrentPosition());//-6150
-        robot.inVertical.setPower(-gamepad2.right_stick_y * 0.15);
+        robot.inVertical.setPower(-gamepad2.right_stick_y * 0.1);
         robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Set motor power to stick input, directionally scaled
@@ -113,5 +115,14 @@ public class teleOp extends OpMode {
         else
             robot.intakeGate.setPosition(-1.0);
         telemetry.update();
+
+        telemetry.addData("Time", Math.round(runtime.seconds() - 8));
+        if(runtime.seconds() >= 108 && runtime.seconds() <= 128){
+            pattern = RevBlinkinLedDriver.BlinkinPattern.STROBE_RED;
+        }
+        else{
+            pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
+        }
+        robot.blinkinLedDriver.setPattern(pattern);
     }
 }

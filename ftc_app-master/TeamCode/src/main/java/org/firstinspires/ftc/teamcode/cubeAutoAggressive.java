@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -67,6 +68,8 @@ public class cubeAutoAggressive extends LinearOpMode {
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
 
+        robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_GREEN);
+
         waitForStart();
         runtime.reset();
 
@@ -76,6 +79,7 @@ public class cubeAutoAggressive extends LinearOpMode {
             }
             runtime.reset();
             while (runtime.seconds() < 3 && opModeIsActive()) {
+                robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.FIRE_LARGE);
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
@@ -135,6 +139,8 @@ public class cubeAutoAggressive extends LinearOpMode {
         sleep(3000);
         robot.ADM.setPower(.05); //To stop jittering
 
+        robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.STROBE_GOLD);
+
         //Slide over
         if (opModeIsActive()) {
             robot.traverse.setPosition(robot.maxTraverse);
@@ -143,13 +149,11 @@ public class cubeAutoAggressive extends LinearOpMode {
         }
 
         if(maxIndex == 0) {
-            robot.turnByGyro(25, .05, opModeIsActive());
+            robot.turnByGyro(30, .05, opModeIsActive());
             robot.encoderDriveStraight(38, 4.0, opModeIsActive(), runtime);
-            robot.encoderDriveStraight(-4, 1.5, opModeIsActive(), runtime);
-            robot.turnByGyro(-45, .07, opModeIsActive());
+            robot.turnByGyro(-45, .05, opModeIsActive());
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
-            robot.turnByGyro(40, .07, opModeIsActive());
-            robot.encoderDriveStraight(4, 1.0, opModeIsActive(), runtime);
+            robot.turnByGyro(40, .05, opModeIsActive());
 
         }
         else if(maxIndex == 1){
@@ -158,11 +162,10 @@ public class cubeAutoAggressive extends LinearOpMode {
             robot.turnByGyro(40, .07, opModeIsActive());
         }
         else if(maxIndex == 2){
-            robot.turnByGyro(-25, .05, opModeIsActive());
-            robot.encoderDriveStraight(42, 4.0, opModeIsActive(), runtime);
-            robot.encoderDriveStraight(-4, 1.5, opModeIsActive(), runtime);
+            robot.turnByGyro(-30, .05, opModeIsActive());
+            robot.encoderDriveStraight(36, 4.0, opModeIsActive(), runtime);
             robot.turnByGyro(40, .05, opModeIsActive());
-            robot.encoderDriveStraight(26, 4.0, opModeIsActive(), runtime);
+            robot.encoderDriveStraight(30, 3.0, opModeIsActive(), runtime);
         }
 
         //Drop off marker (out, in)

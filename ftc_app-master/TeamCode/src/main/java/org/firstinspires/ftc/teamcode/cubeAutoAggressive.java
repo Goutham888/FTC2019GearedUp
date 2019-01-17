@@ -150,9 +150,9 @@ public class cubeAutoAggressive extends LinearOpMode {
 
         if(maxIndex == 0) {
             robot.turnByEncoder(25, .09, opModeIsActive(), 3.0, runtime);
-            robot.encoderDriveStraight(28, 4.0, opModeIsActive(), runtime);
-            robot.turnByEncoder(105, .09, opModeIsActive(), 3.0, runtime);
-            robot.encoderDriveStraight(-38, 4.0, opModeIsActive(), runtime);
+            robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
+            robot.turnByEncoder(97, .09, opModeIsActive(), 3.0, runtime);
+            robot.encoderDriveStraight(-34, 4.0, opModeIsActive(), runtime);
         }
         else if(maxIndex == 1){
             robot.turnByEncoder(0, .09, opModeIsActive(), 3.0, runtime);
@@ -161,7 +161,7 @@ public class cubeAutoAggressive extends LinearOpMode {
         }
         else if(maxIndex == 2){
             robot.turnByEncoder(-32, .09, opModeIsActive(), 3.0, runtime);
-            robot.encoderDriveStraight(36, 4.0, opModeIsActive(), runtime);
+            robot.encoderDriveStraight(38, 4.0, opModeIsActive(), runtime);
             robot.encoderDriveStraight(-4, 1.0, opModeIsActive(), runtime);
             robot.turnByEncoder(72, .09, opModeIsActive(), 3.0, runtime);
             robot.encoderDriveStraight(36, 3.0, opModeIsActive(), runtime);

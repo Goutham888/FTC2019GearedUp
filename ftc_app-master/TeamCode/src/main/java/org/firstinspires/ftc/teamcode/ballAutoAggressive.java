@@ -149,18 +149,18 @@ public class ballAutoAggressive extends LinearOpMode {
         }
 
         if(maxIndex == 0) {
-            robot.turnByGyro(25, .05, opModeIsActive());
+            robot.turnByEncoder(25, .05, opModeIsActive(), 3.0, runtime);
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
         }
         else if(maxIndex == 1){
-            robot.turnByGyro(0, .05, opModeIsActive());
+            robot.turnByEncoder(0, .05, opModeIsActive(), 3.0, runtime);
             robot.encoderDriveStraight(16, 5.0, opModeIsActive(), runtime);
-            robot.turnByGyro(179, .07, opModeIsActive());
+            robot.turnByEncoder(179, .07, opModeIsActive(), 3.0, runtime);
             robot.encoderDriveStraight(12, 2.0, opModeIsActive(), runtime);
 
         }
         else if(maxIndex == 2){
-            robot.turnByGyro(-25, .05, opModeIsActive());
+            robot.turnByEncoder(-30, .05, opModeIsActive(), 3.0, runtime);
             robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
         }
     }

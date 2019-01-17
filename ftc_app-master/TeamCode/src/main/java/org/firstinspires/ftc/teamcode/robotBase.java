@@ -55,7 +55,7 @@ public class robotBase
 
     public static final double  COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV_rev * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    public static final double  DRIVE_SPEED = 0.25;
+    public static final double  DRIVE_SPEED = 0.21; //.23
     public static final double  HEADING_THRESHOLD  = 2;
 
     public static final double  LEAD_SCREW_TURNS = 12.25; // Turns in the ADM lead screw
@@ -68,6 +68,8 @@ public class robotBase
     public static final double markerIn = .15;
     public static final double markerMid = .3;
     public static final double markerOut = .8;
+
+    public static final double ticksPerDegree = 1800/360;
 
     /* Constructor */
 
@@ -106,7 +108,8 @@ public class robotBase
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ADM.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        inVertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //inVertical.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        inVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         inHorizontal.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         hall = hwMap.get(DigitalChannel.class, "hall");
@@ -125,7 +128,18 @@ public class robotBase
         navxMicro = hwMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = navxMicro;
     }
+    /*public void verticalToEncoder(boolean opMode, int angle){
+        inVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        inVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        int targetPos=;
 
+        while(opMode && inVertical.getCurrentPosition()<targetPos){
+            inVertical.setPower(Math.abs(1));
+        }
+
+        // Stop all motion;
+        inVertical.setPower(0);
+    }*/
     //Auto Methods
     public void encoderDriveStraight(double inches, double timeoutS, boolean opMode, ElapsedTime runtime) {
         int newLeftTarget;
@@ -175,8 +189,9 @@ public class robotBase
     }
 
 
-    public void turnByGyro(double targetAngle, double speed, boolean opMode) {
-        while(opMode){
+    public void turnByGyro(double targetAngle, double speed, boolean opMode, double timeoutS, ElapsedTime runtime) {
+        runtime.reset();
+        while(opMode && runtime.seconds() <timeoutS){
             float CurAngle = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
 
             if ((CurAngle >= (targetAngle - (HEADING_THRESHOLD / 2))) && (CurAngle <= (targetAngle + (HEADING_THRESHOLD / 2)))) {
@@ -193,6 +208,41 @@ public class robotBase
                 leftDrive.setPower(-speed);
             }
         }
+        brake();
+    }
+
+    public void turnByEncoder(double targetAngle, double speed, boolean opMode, double timeoutS, ElapsedTime runtime){
+        int newLeftTarget;
+        int newRightTarget;
+        int targetTicks = (int)(targetAngle*ticksPerDegree);
+
+        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = leftDrive.getCurrentPosition() + targetTicks;
+        newRightTarget = rightDrive.getCurrentPosition() - targetTicks;
+        leftDrive.setTargetPosition(newLeftTarget);
+        rightDrive.setTargetPosition(newRightTarget);
+
+        // reset the timeout time and start motion.
+        runtime.reset();
+        leftDrive.setPower(Math.abs(speed));
+        rightDrive.setPower(Math.abs(speed));
+        while (opMode && (runtime.seconds() < timeoutS) && (leftDrive.isBusy() || rightDrive.isBusy())) {
+
+        }
+
+        // Stop all motion;
+        brake();
+
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Turn off RUN_TO_POSITION
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        brake();
     }
 
     public void brake() {

@@ -64,7 +64,7 @@ public class ballAuto extends LinearOpMode {
             robot.traverse.setPosition(robot.maxTraverse);
             sleep(2000);
             robot.encoderDriveStraight(22, 5.0, opModeIsActive(), runtime);
-            robot.turnByGyro(179, .07, opModeIsActive());
+            robot.turnByEncoder(179, .07, opModeIsActive(), 3.0, runtime);
             robot.encoderDriveStraight(10, 2.0, opModeIsActive(), runtime);
         }
         sleep(1000);

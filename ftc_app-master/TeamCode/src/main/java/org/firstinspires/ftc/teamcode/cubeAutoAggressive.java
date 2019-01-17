@@ -149,23 +149,22 @@ public class cubeAutoAggressive extends LinearOpMode {
         }
 
         if(maxIndex == 0) {
-            robot.turnByGyro(30, .05, opModeIsActive());
-            robot.encoderDriveStraight(38, 4.0, opModeIsActive(), runtime);
-            robot.turnByGyro(-45, .05, opModeIsActive());
-            robot.encoderDriveStraight(32, 4.0, opModeIsActive(), runtime);
-            robot.turnByGyro(40, .05, opModeIsActive());
-
+            robot.turnByEncoder(25, .09, opModeIsActive(), 3.0, runtime);
+            robot.encoderDriveStraight(28, 4.0, opModeIsActive(), runtime);
+            robot.turnByEncoder(105, .09, opModeIsActive(), 3.0, runtime);
+            robot.encoderDriveStraight(-38, 4.0, opModeIsActive(), runtime);
         }
         else if(maxIndex == 1){
-            robot.turnByGyro(0, .07, opModeIsActive());
+            robot.turnByEncoder(0, .09, opModeIsActive(), 3.0, runtime);
             robot.encoderDriveStraight(51, 5.0, opModeIsActive(), runtime);
-            robot.turnByGyro(40, .07, opModeIsActive());
+            robot.turnByEncoder(40, .09, opModeIsActive(), 3.0, runtime);
         }
         else if(maxIndex == 2){
-            robot.turnByGyro(-30, .05, opModeIsActive());
+            robot.turnByEncoder(-32, .09, opModeIsActive(), 3.0, runtime);
             robot.encoderDriveStraight(36, 4.0, opModeIsActive(), runtime);
-            robot.turnByGyro(40, .05, opModeIsActive());
-            robot.encoderDriveStraight(30, 3.0, opModeIsActive(), runtime);
+            robot.encoderDriveStraight(-4, 1.0, opModeIsActive(), runtime);
+            robot.turnByEncoder(72, .09, opModeIsActive(), 3.0, runtime);
+            robot.encoderDriveStraight(36, 3.0, opModeIsActive(), runtime);
         }
 
         //Drop off marker (out, in)
@@ -173,8 +172,6 @@ public class cubeAutoAggressive extends LinearOpMode {
             robot.marker.setPosition(robot.markerOut);
             sleep(1000);
             robot.marker.setPosition(robot.markerMid);
-            robot.turnByGyro(-45, .07, opModeIsActive());
-            robot.encoderDriveStraight(-20, 3.0, opModeIsActive(), runtime);
         }
     }
         /**

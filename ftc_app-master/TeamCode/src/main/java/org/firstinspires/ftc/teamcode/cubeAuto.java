@@ -61,10 +61,10 @@ public class cubeAuto extends LinearOpMode {
         robot.traverse.setPosition(robot.maxTraverse);
         sleep(2000);
 
-        robot.turnByGyro(0, .07, opModeIsActive());
+        robot.turnByEncoder(0, .07, opModeIsActive(), 3.0, runtime);
         robot.encoderDriveStraight(51, 5.0, opModeIsActive(), runtime);
         sleep(1000);
-        robot.turnByGyro(40, .07, opModeIsActive());
+        robot.turnByEncoder(40, .07, opModeIsActive(), 3.0, runtime);
 
         if (opModeIsActive()) {
             robot.marker.setPosition(robot.markerOut);

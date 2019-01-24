@@ -52,57 +52,18 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Vertical Test", group="Linear Opmode")
+@Autonomous(name="Blinkin Test", group="Linear Opmode")
 @Disabled
 public class VerticalTest extends LinearOpMode {
 
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
+    robotBase robot                     = new robotBase();
+    private ElapsedTime runtime         = new ElapsedTime();
     private DcMotor test = null;
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        test  = hardwareMap.get(DcMotor.class, "test");
-
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        test.setDirection(DcMotor.Direction.REVERSE);
-        test.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        test.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        telemetry.addData("EncoderPos", test.getCurrentPosition());
-        telemetry.update();
-
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-        runtime.reset();
-
-        int targetPos= -1750;
-        test.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // reset the timeout time and start motion.
-        runtime.reset();
-
-
-        while(test.getCurrentPosition()>targetPos){
-            telemetry.addData("EncoderPos", test.getCurrentPosition());
-            telemetry.update();
-            test.setPower(0.05);
-        }
-
-        // Stop all motion;
-        test.setPower(0);
-
-        sleep(5000);
-
-
-        sleep(1000);
-
-        test.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+        sleep(6000);
     }
 }

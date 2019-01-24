@@ -20,6 +20,7 @@ public class teleOp extends OpMode {
     private ElapsedTime runtime         = new ElapsedTime();
 
     int direction = -1;
+    int targetPos= -2000;
 
     double leftPower = 0.0;
     double rightPower = 0.0;
@@ -29,11 +30,26 @@ public class teleOp extends OpMode {
         robot.init(hardwareMap);
         robot.ADM.setMode(STOP_AND_RESET_ENCODER);
         robot.ADM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         robot.leftDrive.setMode(RUN_USING_ENCODER);
         robot.rightDrive.setMode(RUN_USING_ENCODER);
+
         robot.inVertical.setMode(STOP_AND_RESET_ENCODER);
-        robot.inVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.inVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         runtime.reset();
+
+    }
+
+    public void start() {
+        if(robot.inVertical.getCurrentPosition()>targetPos) {
+            while ((robot.inVertical.getCurrentPosition() > targetPos)) {
+                telemetry.addData("EncoderPos", robot.inVertical.getCurrentPosition());
+                telemetry.update();
+                robot.inVertical.setPower(0.03);
+            }
+        }
+        robot.traverse.setPosition(robot.minTraverse);
     }
 
     @Override
@@ -98,32 +114,18 @@ public class teleOp extends OpMode {
         }
 
         //------------------------------------------------------------------------------------------
-        robot.inVertical.setMode(RUN_USING_ENCODER);
-
-        robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.inVertical.setPower(-gamepad2.right_stick_y * 0.1);
 
-        telemetry.addData("EncoderPos", robot.inVertical.getCurrentPosition());
-        int targetPos= -1750;
         if(gamepad2.y){
-            robot.inVertical.setMode(RUN_TO_POSITION);
-            if(robot.inVertical.getCurrentPosition()>targetPos) {
-                while ((robot.inVertical.getCurrentPosition() > targetPos)) {
-                    telemetry.addData("EncoderPos", robot.inVertical.getCurrentPosition());
-                    telemetry.update();
-                    robot.inVertical.setPower(0.05);
+            /// make arm move until reached hall effect sensor, then stop
+                while (robot.vertHall.getState()) {
+                    robot.inVertical.setPower(-0.03);
                 }
-            }
-            else{
-                while ((robot.inVertical.getCurrentPosition() < targetPos)) {
-                    telemetry.addData("EncoderPos", robot.inVertical.getCurrentPosition());
-                    telemetry.update();
-                    robot.inVertical.setPower(-0.05);
-                }
-            }
             // Stop all motion;
             robot.inVertical.setPower(0);
+
         }
+
 
         //Set motor power to stick input, directionally scaled
         robot.inHorizontal.setPower(gamepad2.left_stick_y);

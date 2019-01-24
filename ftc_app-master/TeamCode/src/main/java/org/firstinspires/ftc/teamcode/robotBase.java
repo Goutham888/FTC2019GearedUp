@@ -37,9 +37,10 @@ public class robotBase
 
     public Servo traverse                   = null; //ADM_servo
     public Servo marker                     = null; //team_marker
-    public Servo intakeGate                = null; //intake_pitch
+    public Servo intakeGate                 = null; //intake_pitch
     public CRServo intake                   = null; //intake
-    public DigitalChannel hall              = null; //hall
+    public DigitalChannel hall              = null; //
+    public DigitalChannel vertHall          = null; //vertHall
     IntegratingGyroscope gyro;
     RevBlinkinLedDriver blinkinLedDriver;
     NavxMicroNavigationSensor navxMicro;
@@ -113,6 +114,7 @@ public class robotBase
         inHorizontal.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         hall = hwMap.get(DigitalChannel.class, "hall");
+        vertHall = hwMap.get(DigitalChannel.class, "vertHall");
 
         traverse = hwMap.get(Servo.class, "ADM_servo");
         traverse.setDirection(Servo.Direction.FORWARD);
@@ -128,18 +130,6 @@ public class robotBase
         navxMicro = hwMap.get(NavxMicroNavigationSensor.class, "navx");
         gyro = navxMicro;
     }
-    /*public void verticalToEncoder(boolean opMode, int angle){
-        inVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        inVertical.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        int targetPos=;
-
-        while(opMode && inVertical.getCurrentPosition()<targetPos){
-            inVertical.setPower(Math.abs(1));
-        }
-
-        // Stop all motion;
-        inVertical.setPower(0);
-    }*/
     //Auto Methods
     public void encoderDriveStraight(double inches, double timeoutS, boolean opMode, ElapsedTime runtime) {
         int newLeftTarget;

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static android.os.SystemClock.sleep;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
@@ -30,6 +31,8 @@ public class teleOp extends OpMode {
         robot.ADM.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.leftDrive.setMode(RUN_USING_ENCODER);
         robot.rightDrive.setMode(RUN_USING_ENCODER);
+        robot.inVertical.setMode(STOP_AND_RESET_ENCODER);
+        robot.inVertical.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         runtime.reset();
     }
 
@@ -96,8 +99,31 @@ public class teleOp extends OpMode {
 
         //------------------------------------------------------------------------------------------
         robot.inVertical.setMode(RUN_USING_ENCODER);
-        robot.inVertical.setPower(-gamepad2.right_stick_y * 0.1);
+
         robot.inVertical.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.inVertical.setPower(-gamepad2.right_stick_y * 0.1);
+
+        telemetry.addData("EncoderPos", robot.inVertical.getCurrentPosition());
+        int targetPos= -1750;
+        if(gamepad2.y){
+            robot.inVertical.setMode(RUN_TO_POSITION);
+            if(robot.inVertical.getCurrentPosition()>targetPos) {
+                while ((robot.inVertical.getCurrentPosition() > targetPos)) {
+                    telemetry.addData("EncoderPos", robot.inVertical.getCurrentPosition());
+                    telemetry.update();
+                    robot.inVertical.setPower(0.05);
+                }
+            }
+            else{
+                while ((robot.inVertical.getCurrentPosition() < targetPos)) {
+                    telemetry.addData("EncoderPos", robot.inVertical.getCurrentPosition());
+                    telemetry.update();
+                    robot.inVertical.setPower(-0.05);
+                }
+            }
+            // Stop all motion;
+            robot.inVertical.setPower(0);
+        }
 
         //Set motor power to stick input, directionally scaled
         robot.inHorizontal.setPower(gamepad2.left_stick_y);
@@ -114,7 +140,6 @@ public class teleOp extends OpMode {
             robot.intakeGate.setPosition(1.0);
         else
             robot.intakeGate.setPosition(-1.0);
-        telemetry.update();
 
         telemetry.addData("Time", Math.round(runtime.seconds() - 8));
         if(runtime.seconds() >= 108 && runtime.seconds() <= 128){
@@ -124,5 +149,6 @@ public class teleOp extends OpMode {
             pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
         }
         robot.blinkinLedDriver.setPattern(pattern);
+        telemetry.update();
     }
 }

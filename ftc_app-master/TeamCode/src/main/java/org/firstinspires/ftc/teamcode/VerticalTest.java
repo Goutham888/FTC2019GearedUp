@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -82,21 +83,25 @@ public class VerticalTest extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        int targetPos=2400;
-
-
+        int targetPos= -1750;
+        test.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // reset the timeout time and start motion.
         runtime.reset();
 
 
-        while(test.getCurrentPosition()<targetPos){
+        while(test.getCurrentPosition()>targetPos){
             telemetry.addData("EncoderPos", test.getCurrentPosition());
             telemetry.update();
-            test.setPower(Math.abs(0.2));
+            test.setPower(0.05);
         }
 
         // Stop all motion;
         test.setPower(0);
+
+        sleep(5000);
+
+
+        sleep(1000);
 
         test.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }

@@ -50,18 +50,6 @@ public class cubeAutoAggressive extends LinearOpMode {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
-        telemetry.log().add("Gyro Calibrating. Do Not Move!");
-
-        runtime.reset();
-        while (robot.navxMicro.isCalibrating())  {
-            telemetry.addData("calibrating", "%s", Math.round(runtime.seconds())%2==0 ? "|.." : "..|");
-            telemetry.update();
-            sleep(50);
-        }
-        telemetry.log().clear(); telemetry.log().add("Gyro Calibrated. Press Start.");
-        telemetry.clear();
-
-
         telemetry.update();
 
         /** Wait for the game to begin */

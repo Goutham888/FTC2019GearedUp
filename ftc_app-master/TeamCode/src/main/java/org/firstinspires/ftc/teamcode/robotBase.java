@@ -259,14 +259,6 @@ public class robotBase
         return (float)in;
     }
 
-    String formatRate(float rate) {
-        return String.format("%.3f", rate);
-    }
-
-    String formatAngle(AngleUnit angleUnit, double angle) {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-    }
-
     String formatDegrees(double degrees){
         return String.format("%.1f", AngleUnit.DEGREES.normalize(degrees));
     }

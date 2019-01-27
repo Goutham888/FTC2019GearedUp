@@ -145,7 +145,7 @@ public class ballAutoAggressive extends LinearOpMode {
         else if(maxIndex == 1){
             robot.turnByEncoder(0, .05, opModeIsActive(), 3.0, runtime);
             robot.encoderDriveStraight(18, 2.0, opModeIsActive(), runtime);
-            robot.encoderDriveStraight(-14, 2.0, opModeIsActive(), runtime);
+            robot.encoderDriveStraight(-10, 3.0, opModeIsActive(), runtime);
             robot.turnByEncoder(-100, .13, opModeIsActive(), 3.0, runtime);
         }
         else if(maxIndex == 2){
@@ -154,9 +154,9 @@ public class ballAutoAggressive extends LinearOpMode {
             robot.encoderDriveStraight(-20, 2.0, opModeIsActive(), runtime);
             robot.turnByEncoder(-45, .13, opModeIsActive(), 3.0, runtime);
         }
-        robot.encoderDriveStraight(-40, 3.0, opModeIsActive(), runtime);
-        robot.turnByEncoder(45, .13, opModeIsActive(), 2.0, runtime);
-        robot.encoderDriveStraight(-60, 3.0, opModeIsActive(), runtime);
+        robot.encoderDriveStraight(-38, 3.0, opModeIsActive(), runtime);
+        robot.turnByEncoder(-129, .13, opModeIsActive(), 2.0, runtime);
+        robot.encoderDriveStraight(60, 3.0, opModeIsActive(), runtime);
 
         if (opModeIsActive()) {
             robot.marker.setPosition(robot.markerOut);
@@ -164,7 +164,9 @@ public class ballAutoAggressive extends LinearOpMode {
             robot.marker.setPosition(robot.markerMid);
         }
 
-        robot.encoderDriveStraight(80, 4.0, opModeIsActive(), runtime);
+        //robot.turnByEncoder(45, .13, opModeIsActive(), 2.0, runtime);
+        //robot.turnByEncoder(-45, .13, opModeIsActive(), 2.0, runtime);
+        //robot.encoderDriveStraight(-80, 4.0, opModeIsActive(), runtime);
     }
     /**
      * Initialize the Vuforia localization engine.

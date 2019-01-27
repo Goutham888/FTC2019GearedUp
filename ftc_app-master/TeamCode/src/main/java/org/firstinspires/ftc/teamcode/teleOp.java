@@ -121,12 +121,22 @@ public class teleOp extends OpMode {
                 while (robot.vertHall.getState()) {
                     robot.inVertical.setPower(-0.03);
                 }
+                sleep(190);
             // Stop all motion;
             robot.inVertical.setPower(0);
+            robot.inVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         }
+        /*if(!gamepad2.y) {
+            if (robot.inVertical.getCurrentPosition() > 0) {
+                //robot.inVertical.setPower(0.02);
+                telemetry.addData("stop", "true");
+            }
+        }*/
 
 
+
+        telemetry.addData("Arm", robot.inVertical.getCurrentPosition());
         //Set motor power to stick input, directionally scaled
         robot.inHorizontal.setPower(gamepad2.left_stick_y);
 

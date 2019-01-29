@@ -165,6 +165,7 @@ public class teleOp extends OpMode {
             robot.inVertical.setPower(0);
             armLimitReached=true;
         }*/
+            /*
         if(robot.inVertical.getCurrentPosition()<0){
             armLimitReached=true;
         }
@@ -174,10 +175,11 @@ public class teleOp extends OpMode {
             robot.inVertical.setPower(0);
             armLimitReached=false;
         }
-        if(!armLimitReached){
+        */
+        //if(!armLimitReached){
             robot.inVertical.setPower(-gamepad2.right_stick_y * 0.1);
 
-        }
+        //}
 
         telemetry.addData("Arm", robot.inVertical.getCurrentPosition());
         //Set motor power to stick input, directionally scaled

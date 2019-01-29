@@ -16,9 +16,9 @@ import java.util.List;
 import static org.firstinspires.ftc.teamcode.robotBase.midTraverseRight;
 
 
-@Autonomous(name = "***BallAuto AGGRESSIVE EXP")
+@Autonomous(name = "BallAuto AGGRESSIVE ")
 //@Disabled
-public class ballAutoAggressive extends LinearOpMode {
+public class ballAutoAggressiveNoDepot extends LinearOpMode {
     robotBase robot = new robotBase();
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -139,33 +139,18 @@ public class ballAutoAggressive extends LinearOpMode {
         if(maxIndex == 0) {
             robot.turnByEncoder(30, .13, opModeIsActive(), 2.0, runtime);
             robot.encoderDriveStraight(24, 2.0, opModeIsActive(), runtime);
-            robot.encoderDriveStraight(-12, 3.0, opModeIsActive(), runtime);
-            robot.turnByEncoder(-135, .13, opModeIsActive(), 3.0, runtime);
+            robot.encoderDriveStraight(-24, 3.0, opModeIsActive(), runtime);
         }
         else if(maxIndex == 1){
             robot.turnByEncoder(0, .13, opModeIsActive(), 2.0, runtime);
             robot.encoderDriveStraight(18, 3.0, opModeIsActive(), runtime);
-            robot.encoderDriveStraight(-15, 3.0, opModeIsActive(), runtime);
-            robot.turnByEncoder(-90, .13, opModeIsActive(), 2.0, runtime);
+            robot.encoderDriveStraight(-18, 3.0, opModeIsActive(), runtime);
         }
         else if(maxIndex == 2){
             robot.turnByEncoder(-35, .13, opModeIsActive(), 2.0, runtime);
             robot.encoderDriveStraight(24, 2.0, opModeIsActive(), runtime);
-            robot.encoderDriveStraight(-18, 3.0, opModeIsActive(), runtime);
-            robot.turnByEncoder(-60, .13, opModeIsActive(), 2.0, runtime);
+            robot.encoderDriveStraight(-24, 3.0, opModeIsActive(), runtime);
         }
-        robot.encoderDriveStraight(-55, 3.0, opModeIsActive(), runtime);
-        robot.encoderDriveStraight(3, 1.0, opModeIsActive(), runtime);
-        robot.turnByEncoder(-85, .13, opModeIsActive(), 2.0, runtime);
-        robot.encoderDriveStraight(45, 3.0, opModeIsActive(), runtime);
-
-        robot.turnByEncoder(45, .18, opModeIsActive(), 2.0, runtime);
-        if (opModeIsActive()) {
-            robot.marker.setPosition(robot.markerOut);
-            robot.turnByEncoder(45, .18, opModeIsActive(), 2.0, runtime);
-            robot.marker.setPosition(robot.markerMid);
-        }
-        robot.encoderDriveStraight(5, 2.0, opModeIsActive(), runtime);
     }
     /**
      * Initialize the Vuforia localization engine.

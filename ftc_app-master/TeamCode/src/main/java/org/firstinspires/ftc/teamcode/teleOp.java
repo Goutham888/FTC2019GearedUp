@@ -24,7 +24,8 @@ public class teleOp extends OpMode {
 
     double leftPower = 0.0;
     double rightPower = 0.0;
-
+    private boolean turnOffMotor=false;
+    private boolean armLimitReached=true;
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -49,6 +50,7 @@ public class teleOp extends OpMode {
                 robot.inVertical.setPower(0.03);
             }
         }
+        robot.inVertical.setPower(0);
         robot.traverse.setPosition(robot.minTraverse);
     }
 
@@ -114,9 +116,10 @@ public class teleOp extends OpMode {
         }
 
         //------------------------------------------------------------------------------------------
-        robot.inVertical.setPower(-gamepad2.right_stick_y * 0.1);
 
-        if(gamepad2.y){
+
+
+        /*if(gamepad2.y){
             /// make arm move until reached hall effect sensor, then stop
                 while (robot.vertHall.getState()) {
                     robot.inVertical.setPower(-0.03);
@@ -126,7 +129,7 @@ public class teleOp extends OpMode {
             robot.inVertical.setPower(0);
             robot.inVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        }
+        }*/
         /*if(!gamepad2.y) {
             if (robot.inVertical.getCurrentPosition() > 0) {
                 //robot.inVertical.setPower(0.02);
@@ -134,7 +137,32 @@ public class teleOp extends OpMode {
             }
         }*/
 
+        while(robot.vertHall.getState() && gamepad2.y && !armLimitReached){
+            telemetry.addData("inVertical Direction", "In");
+            telemetry.update();
+            //robot.inVertical.setPower(-0.03);
+            turnOffMotor=true;
+        }
 
+        if(turnOffMotor){
+            sleep(320);
+            robot.inVertical.setPower(0);
+            robot.inVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            turnOffMotor=false;
+        }
+        if(robot.inVertical.getCurrentPosition()<0){
+            robot.inVertical.setPower(-gamepad2.right_stick_y * 0.1);
+            armLimitReached=false;
+        }
+        else {
+            while (robot.inVertical.getCurrentPosition() > 0) {
+                telemetry.addData("inVertical Direction","Out");
+                telemetry.update();
+                //robot.inVertical.setPower(0.03);
+            }
+            robot.inVertical.setPower(0);
+            armLimitReached=true;
+        }
 
         telemetry.addData("Arm", robot.inVertical.getCurrentPosition());
         //Set motor power to stick input, directionally scaled

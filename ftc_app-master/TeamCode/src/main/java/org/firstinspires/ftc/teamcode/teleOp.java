@@ -137,10 +137,10 @@ public class teleOp extends OpMode {
             }
         }*/
 
-        while(robot.vertHall.getState() && gamepad2.y && !armLimitReached){
+        /*while(robot.vertHall.getState() && gamepad2.y && !armLimitReached){
             telemetry.addData("inVertical Direction", "In");
             telemetry.update();
-            //robot.inVertical.setPower(-0.03);
+            robot.inVertical.setPower(-0.03);
             turnOffMotor=true;
         }
 
@@ -155,13 +155,28 @@ public class teleOp extends OpMode {
             armLimitReached=false;
         }
         else {
-            while (robot.inVertical.getCurrentPosition() > 0) {
+            robot.inVertical.setPower(0.03);
+            /*while (robot.inVertical.getCurrentPosition() > 0) {
                 telemetry.addData("inVertical Direction","Out");
                 telemetry.update();
-                //robot.inVertical.setPower(0.03);
-            }
+                robot.inVertical.setPower(0.03);
+            }*/
+            /*sleep(190);
             robot.inVertical.setPower(0);
             armLimitReached=true;
+        }*/
+        if(robot.inVertical.getCurrentPosition()<0){
+            armLimitReached=true;
+        }
+        if(armLimitReached){
+            robot.inVertical.setPower(0.03);
+            sleep(190);
+            robot.inVertical.setPower(0);
+            armLimitReached=false;
+        }
+        if(!armLimitReached){
+            robot.inVertical.setPower(-gamepad2.right_stick_y * 0.1);
+
         }
 
         telemetry.addData("Arm", robot.inVertical.getCurrentPosition());

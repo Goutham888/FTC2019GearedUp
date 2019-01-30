@@ -25,6 +25,7 @@ public class teleOp extends OpMode {
     double leftPower = 0.0;
     double rightPower = 0.0;
     private boolean turnOffMotor=false;
+    boolean found = false;
     private boolean armLimitReached=true;
     @Override
     public void init() {
@@ -43,6 +44,7 @@ public class teleOp extends OpMode {
     }
 
     public void start() {
+
         if(robot.inVertical.getCurrentPosition()>targetPos) {
             while ((robot.inVertical.getCurrentPosition() > targetPos)) {
                 telemetry.addData("EncoderPos", robot.inVertical.getCurrentPosition());
@@ -50,6 +52,7 @@ public class teleOp extends OpMode {
                 robot.inVertical.setPower(0.03);
             }
         }
+
         robot.inVertical.setPower(0);
         robot.traverse.setPosition(robot.minTraverse);
     }
@@ -117,19 +120,20 @@ public class teleOp extends OpMode {
 
         //------------------------------------------------------------------------------------------
 
-
-
-        /*if(gamepad2.y){
             /// make arm move until reached hall effect sensor, then stop
-                while (robot.vertHall.getState()) {
-                    robot.inVertical.setPower(-0.03);
-                }
-                sleep(190);
-            // Stop all motion;
-            robot.inVertical.setPower(0);
-            robot.inVertical.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        }*/
+
+                while (robot.vertHall.getState() && gamepad2.y) {
+                    robot.inVertical.setPower(-0.03);
+                    found = true;
+                }
+                if(found && !robot.vertHall.getState()){
+                    sleep(340);
+                    robot.inVertical.setPower(0);
+                    found = false;
+                }
+
+
         /*if(!gamepad2.y) {
             if (robot.inVertical.getCurrentPosition() > 0) {
                 //robot.inVertical.setPower(0.02);

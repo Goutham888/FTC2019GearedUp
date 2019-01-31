@@ -138,7 +138,8 @@ public class cubeAutoAggressive extends LinearOpMode {
 
         if(maxIndex == 0) {
             robot.turnByEncoder(30, .09, opModeIsActive(), 3.0, runtime);
-            robot.encoderDriveStraight(36, 2.0, opModeIsActive(), runtime);
+            robot.encoderDriveStraight(39, 2.5, opModeIsActive(), runtime);
+            robot.encoderDriveStraight(-2, 1.0, opModeIsActive(), runtime);
             robot.turnByEncoder(-80, .09, opModeIsActive(), 3.0, runtime);
             robot.encoderDriveStraight(30, 2.0, opModeIsActive(), runtime);
             robot.turnByEncoder(90, .11, opModeIsActive(), 3.0, runtime);
@@ -151,7 +152,8 @@ public class cubeAutoAggressive extends LinearOpMode {
         }
         else if(maxIndex == 2) {
             robot.turnByEncoder(-32, .09, opModeIsActive(), 3.0, runtime);
-            robot.encoderDriveStraight(32, 2.0, opModeIsActive(), runtime);
+            robot.encoderDriveStraight(38, 3.0, opModeIsActive(), runtime);
+            robot.encoderDriveStraight(-2, 1.0, opModeIsActive(), runtime);
             robot.turnByEncoder(75, .09, opModeIsActive(), 3.0, runtime);
             robot.encoderDriveStraight(30, 2.0, opModeIsActive(), runtime);
         }
@@ -167,7 +169,8 @@ public class cubeAutoAggressive extends LinearOpMode {
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.turnByEncoder(-112, .13, opModeIsActive(), 3.5, runtime);
-        robot.encoderDriveStraight(-70, 5.0, opModeIsActive(), runtime);
+        robot.encoderDriveStraight(-15, 2.0, opModeIsActive(), runtime);
+
     }
         /**
          * Initialize the Vuforia localization engine.

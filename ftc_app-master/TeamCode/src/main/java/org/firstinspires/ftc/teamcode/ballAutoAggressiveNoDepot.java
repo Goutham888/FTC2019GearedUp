@@ -142,12 +142,12 @@ public class ballAutoAggressiveNoDepot extends LinearOpMode {
             robot.encoderDriveStraight(-24, 3.0, opModeIsActive(), runtime);
         }
         else if(maxIndex == 1){
-            robot.turnByEncoder(0, .13, opModeIsActive(), 2.0, runtime);
+            robot.turnByEncoder(0, .3, opModeIsActive(), 2.0, runtime);
             robot.encoderDriveStraight(18, 3.0, opModeIsActive(), runtime);
             robot.encoderDriveStraight(-18, 3.0, opModeIsActive(), runtime);
         }
         else if(maxIndex == 2){
-            robot.turnByEncoder(-35, .13, opModeIsActive(), 2.0, runtime);
+            robot.turnByEncoder(-35, .3, opModeIsActive(), 2.0, runtime);
             robot.encoderDriveStraight(24, 2.0, opModeIsActive(), runtime);
             robot.encoderDriveStraight(-24, 3.0, opModeIsActive(), runtime);
         }
